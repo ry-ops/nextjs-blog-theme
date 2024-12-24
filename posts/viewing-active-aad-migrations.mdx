@@ -1,0 +1,64 @@
+---
+type: Post
+title: Viewing Active AAD Migrations
+description: >-
+  Managing Azure Active Directory (AAD) migrations can be a critical task,
+  especially when transitioning or integrating systems. To stay informed and in
+  control of active migrations, you can use several tools and platforms provided
+  by Microsoft. Here’s a detailed guide to finding and monitoring your active
+  Azure AD migrations.
+date: '2024-12-22'
+---
+## 1. Azure AD Admin Center
+
+The Azure AD Admin Center is the primary interface for managing Azure Active Directory and related tasks. To check your active migrations:
+
+1.  Navigate to the [Azure AD Admin Center]().
+
+2.  Go to **Azure Active Directory** > **Azure AD Connect**.
+
+    *   Here, you can view ongoing syncs or migrations associated with Azure AD Connect.
+
+## 2. Azure AD Connect Health
+
+Azure AD Connect Health provides deeper insights into the health and status of your directory synchronization and migrations:
+
+1.  Open the Azure AD Admin Center.
+
+2.  Navigate to **Azure Active Directory** > **Azure AD Connect** > **Azure AD Connect Health**.
+
+    *   This dashboard highlights the health and performance of directory synchronization, including any issues that might be impacting active migrations.
+
+## 3. Microsoft 365 Admin Center
+
+If your migration involves Microsoft 365 services, such as Exchange or SharePoint, you can use the Microsoft 365 Admin Center:
+
+1.  Access the [Microsoft 365 Admin Center](https://admin.microsoft.com/).
+
+2.  Go to **Setup** > **Data migration**.
+
+    *   Here, you can see and manage migrations for services like Exchange, SharePoint, or OneDrive.
+
+## 4. PowerShell
+
+PowerShell offers a flexible way to monitor Azure AD migrations programmatically. Useful cmdlets include:
+
+*   `Get-MsolUser` – Retrieve user details.
+
+*   `Get-AzureADUser` – View user objects in Azure AD.
+
+*   `Get-MsolDirSyncProvisioningError` – Identify provisioning errors related to directory synchronization.
+
+### Example:
+
+Run the following cmdlet to list directory synchronization errors:
+
+```
+Get-MsolDirSyncProvisioningError
+```
+
+This command helps identify issues that may be hindering your migration.
+
+## Conclusion
+
+Monitoring active Azure Active Directory migrations is essential for ensuring a smooth and efficient transition. By using tools such as the Azure AD Admin Center, Azure AD Connect Health, Microsoft 365 Admin Center, and PowerShell, you can stay informed and resolve issues promptly. Whether you’re managing syncs, migrating services, or troubleshooting errors, these resources provide the visibility and control you need.

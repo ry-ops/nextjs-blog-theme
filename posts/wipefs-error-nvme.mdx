@@ -1,0 +1,92 @@
+---
+type: Post
+title: Wipefs Error Nvme
+description: Resolving the "Error Wiping '/dev/nvme0n1'" Issue
+date: '2024-12-21'
+---
+When attempting to use the `wipefs` command to wipe a partition or disk, you might encounter an error like this:
+
+```
+wipefs: error: /dev/nvme0n1p1: probing initialization failed: Device or resource busy
+```
+
+This error typically indicates that the device or partition is currently in use. This guide will walk you through troubleshooting and resolving the issue.
+
+### Step 1: Check if the Partition is Mounted
+
+A common reason for this error is that the partition is mounted. You can check this with:
+
+```
+lsblk
+```
+
+If `/dev/nvme0n1p1` is shown as mounted, unmount it using:
+
+```
+sudo umount /dev/nvme0n1p1
+```
+
+### Step 2: Check for LVM or RAID Usage
+
+The partition might be part of an LVM (Logical Volume Manager) volume group or a RAID array. Verify this with the following commands:
+
+```
+sudo lvmdiskscan
+sudo pvscan
+sudo vgscan
+sudo mdadm --detail --scan
+```
+
+If the partition is part of an LVM volume group, deactivate it:
+
+```
+sudo vgchange -an <volume_group_name>
+```
+
+### Step 3: Check for Swap Usage
+
+The partition could be configured as swap space. Disable it with:
+
+```
+sudo swapoff /dev/nvme0n1p1
+```
+
+### Step 4: Kill Processes Using the Partition
+
+To determine if any processes are using the partition, run:
+
+```
+sudo fuser -v /dev/nvme0n1p1
+```
+
+If necessary, kill the processes:
+
+```
+sudo fuser -k /dev/nvme0n1p1
+```
+
+### Step 5: Retry the Wipe
+
+With the partition unmounted and processes terminated, reattempt the `wipefs` command:
+
+```
+sudo wipefs --all /dev/nvme0n1
+```
+
+### Step 6: Force a Wipe (If Necessary)
+
+If you’re still encountering issues, you can force a wipe by writing zeros to the start of the disk. Be cautious, as this will irreversibly erase all data on the device:
+
+```
+sudo dd if=/dev/zero of=/dev/nvme0n1 bs=1M count=100
+```
+
+After completing this step, run `wipefs` again to clean up any remaining filesystem signatures:
+
+```
+sudo wipefs --all /dev/nvme0n1
+```
+
+### Conclusion
+
+By following these steps, you should be able to resolve the "Device or resource busy" error and successfully wipe your NVMe drive or partition. Always ensure you understand the implications of each command, especially those that can lead to permanent data loss, like `dd` or `wipefs`. If you’re still experiencing issues, feel free to reach out or consult additional system logs for more information.
